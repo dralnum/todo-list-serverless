@@ -6,4 +6,4 @@
         path: /
         method: post
   environment:
-    DYNAMODB_DEFAULT_TABLE_NAME: ${self:custom.variables.DYNAMODB_DEFAULT_TABLE_NAME}
+    DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}

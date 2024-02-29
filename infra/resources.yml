@@ -1,5 +1,5 @@
 Resources:
-  DefaultTable:
+  TaskTable:
     Type: 'AWS::DynamoDB::Table'
     Properties:
       TableName: task-table-${self:provider.stage}

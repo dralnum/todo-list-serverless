@@ -7,5 +7,5 @@ role:
         - dynamodb:UpdateItem
       Resource:
         Fn::GetAtt:
-          - DefaultTable
+          - TaskTable
           - Arn
