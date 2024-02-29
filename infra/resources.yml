@@ -1,0 +1,16 @@
+Resources:
+  DefaultTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: task-table-${self:provider.stage}
+      AttributeDefinitions:
+        - AttributeName: partition_key
+          AttributeType: S
+        - AttributeName: sort_key
+          AttributeType: S
+      KeySchema:
+        - AttributeName: partition_key
+          KeyType: HASH
+        - AttributeName: sort_key
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST

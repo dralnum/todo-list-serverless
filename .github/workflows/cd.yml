@@ -1,0 +1,85 @@
+name: Continuous Deployment 
+
+on:
+  push:
+    branches: [develop, main]
+
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install NPM dependencies
+        run: |
+          if [ ! -d ./node_modules ]; then
+            npm i
+          fi
+
+      - name: Test
+        run: npm run test
+
+      - name: Cleanup
+        if: ${{ always() }}
+        run: |
+          shopt -s dotglob
+          rm -rf *
+
+  Deploy-Develop:
+    needs: Test
+    name: Deploy Development
+    if: github.ref_name == 'develop'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - name: serverless deploy
+      uses: serverless/github-action@v3.2
+      with:
+        args: -c "serverless plugin install --name serverless-plugin-typescript && serverless deploy --stage dev"
+        entrypoint: /bin/sh
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  
+  Deploy-Main:
+    needs: Test
+    name: Deploy Production
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - name: serverless deploy
+      uses: serverless/github-action@v3.2
+      with:
+        args: -c "serverless plugin install --name serverless-plugin-typescript && serverless deploy --stage prod"
+        entrypoint: /bin/sh
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

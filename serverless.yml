@@ -1,0 +1,32 @@
+service: todo-list
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  deploymentBucket:
+    blockPublicAccess: true
+  iam:
+    role: ${file(./infra/permissions.yml):role}
+  environment:
+    NODE_ENV: ${self:custom.variables.NODE_ENV}
+  tracing:
+    lambda: true
+    apiGateway: true
+
+custom:
+  variables:
+    NODE_ENV: ${self:provider.stage}
+    DYNAMODB_TABLE_NAME: task-table-${self:provider.stage}
+
+plugins:
+  - serverless-plugin-typescript
+
+resources: ${file(./infra/resources.yml)}
+
+package:
+  individually: true
+  excludeDevDependencies: true
+
+functions: ${file(./infra/functions.yml)}

@@ -1,0 +1,9 @@
+'create-task':
+  handler: src/usecases/create-task/index.handler
+  description: create task
+  events:
+    - http:
+        path: /
+        method: post
+  environment:
+    DYNAMODB_DEFAULT_TABLE_NAME: ${self:custom.variables.DYNAMODB_DEFAULT_TABLE_NAME}
