@@ -1,6 +1,6 @@
 import { boolean, coerce, date, nonempty, object, optional, string } from 'superstruct';
 
-const CoercedDate = coerce(date(), string(), dateString => {
+export const CoercedDate = coerce(date(), string(), dateString => {
   return new Date(dateString);
 });
 

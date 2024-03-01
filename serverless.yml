@@ -19,6 +19,7 @@ custom:
   variables:
     NODE_ENV: ${self:provider.stage}
     DYNAMODB_TABLE_NAME: task-table-${self:provider.stage}
+    DYNAMODB_DAILY_TASKS_INDEX_NAME: list_daily_tasks_index
 
 plugins:
   - serverless-plugin-typescript
