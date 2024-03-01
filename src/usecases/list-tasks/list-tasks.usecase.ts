@@ -4,7 +4,6 @@ export type ListTasksUsecase = ReturnType<typeof ListTasksUsecaseFactory>;
 
 export const ListTasksUsecaseFactory = (repository: ListTasksRepository) => {
   const execute = async ({ date }: { date?: Date }) => {
-    console.log('DATE::::: ', date);
     const tasks = date !== undefined ? await repository.findTasks(date) : await repository.findAllTasks();
 
     return {

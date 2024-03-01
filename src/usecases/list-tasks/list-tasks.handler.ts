@@ -15,8 +15,6 @@ export function ListTasksHandlerFactory(controller: ListTasksController, logger:
       ...(event?.queryStringParameters || {}),
     };
 
-    console.log('DATA FROM CONTROLLER>', data);
-
     const response = await controller.listTasks(data);
 
     return {
