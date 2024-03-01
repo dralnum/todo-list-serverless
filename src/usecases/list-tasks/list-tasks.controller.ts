@@ -46,18 +46,26 @@ export function ListTasksControllerFactory(usecase: ListTasksUsecase, logger: Lo
 
         const mappedError = errorHandler[error.code ?? ListTasksErrorCodes.Default](error);
 
-        logger.error('Mapped error while creating a task', mappedError);
+        logger.error('Mapped error while listing tasks', mappedError);
 
         return mappedError;
       }
 
-      logger.error('Unmapped error while creating a task', err);
+      logger.error('Unmapped error while listing tasks', err);
 
       return errorHandler[ListTasksErrorCodes.Default]();
     }
   };
 
   const errorHandler = {
+    [ListTasksErrorCodes.InvalidParameters]: (error: CustomError<ListTasksErrorCodes>) => ({
+      status: 400,
+      body: {
+        success: false,
+        message: error.message,
+        code: error.code,
+      },
+    }),
     [ListTasksErrorCodes.Default]: () => ({
       status: 500,
       body: {
