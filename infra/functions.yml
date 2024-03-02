@@ -18,3 +18,17 @@
   environment:
     DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}
     DYNAMODB_DAILY_TASKS_INDEX_NAME: ${self:custom.variables.DYNAMODB_DAILY_TASKS_INDEX_NAME}
+
+'find-task':
+  handler: src/usecases/find-task/index.handler
+  description: find task with the given ID
+  events:
+    - http:
+        path: /{taskId}
+        method: get
+        request:
+          parameters:
+            paths:
+              taskId: true
+  environment:
+    DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}
