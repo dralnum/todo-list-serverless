@@ -1,6 +1,6 @@
 import type { DynamoDBClient as AWSSDKDynamoDBClient } from '@aws-sdk/client-dynamodb';
-import type { PutCommandInput, QueryCommandInput, UpdateCommandInput, DeleteCommandInput } from '@aws-sdk/lib-dynamodb';
-import { PutCommand, QueryCommand, UpdateCommand, DeleteCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import type { PutCommandInput, QueryCommandInput, UpdateCommandInput, DeleteCommandInput, ScanCommandInput } from '@aws-sdk/lib-dynamodb';
+import { PutCommand, QueryCommand, UpdateCommand, DeleteCommand, ScanCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 import type { Logger } from '../logger';
 
@@ -28,7 +28,7 @@ export function DynamoDBClientFactory(awsSdkDynamoDbClient: AWSSDKDynamoDBClient
     logger.start(`[DynamoDBClient] query(${params.TableName}, ${partitionKey}, ${sortKey})`);
     const command = new QueryCommand(params);
     const response = await documentClient.send(command);
-    logger.start(`[DynamoDBClient] query(${params.TableName}, ${partitionKey}, ${sortKey})`);
+    logger.end(`[DynamoDBClient] query(${params.TableName}, ${partitionKey}, ${sortKey})`);
     logger.info(`[DynamoDBClient][End] query(${params.TableName}, ${partitionKey}, ${sortKey})`);
 
     return response;
@@ -42,7 +42,7 @@ export function DynamoDBClientFactory(awsSdkDynamoDbClient: AWSSDKDynamoDBClient
     logger.start(`[DynamoDBClient] update(${params.TableName}, ${partitionKey}, ${sortKey})`);
     const command = new UpdateCommand(params);
     const response = await documentClient.send(command);
-    logger.start(`[DynamoDBClient] update(${params.TableName}, ${partitionKey}, ${sortKey})`);
+    logger.end(`[DynamoDBClient] update(${params.TableName}, ${partitionKey}, ${sortKey})`);
     logger.info(`[DynamoDBClient][End] update(${params.TableName}, ${partitionKey}, ${sortKey})`);
 
     return response;
@@ -56,8 +56,19 @@ export function DynamoDBClientFactory(awsSdkDynamoDbClient: AWSSDKDynamoDBClient
     logger.start(`[DynamoDBClient] deleteItem(${params.TableName}, ${partitionKey}, ${sortKey})`);
     const command = new DeleteCommand(params);
     const response = await documentClient.send(command);
-    logger.start(`[DynamoDBClient] deleteItem(${params.TableName}, ${partitionKey}, ${sortKey})`);
+    logger.end(`[DynamoDBClient] deleteItem(${params.TableName}, ${partitionKey}, ${sortKey})`);
     logger.info(`[DynamoDBClient][End] deleteItem(${params.TableName}, ${partitionKey}, ${sortKey})`);
+
+    return response;
+  }
+
+  async function scan(params: ScanCommandInput) {
+    logger.info(`[DynamoDBClient][Start] scan(${JSON.stringify(params)})`);
+    logger.start(`[DynamoDBClient] scan(${JSON.stringify(params)})`);
+    const command = new ScanCommand(params);
+    const response = await documentClient.send(command);
+    logger.end(`[DynamoDBClient] scan(${JSON.stringify(params)})`);
+    logger.info(`[DynamoDBClient][End] scan(${JSON.stringify(params)})`);
 
     return response;
   }
@@ -67,5 +78,6 @@ export function DynamoDBClientFactory(awsSdkDynamoDbClient: AWSSDKDynamoDBClient
     query,
     update,
     deleteItem,
+    scan,
   };
 }

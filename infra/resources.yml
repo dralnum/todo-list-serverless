@@ -13,4 +13,13 @@ Resources:
           KeyType: HASH
         - AttributeName: sort_key
           KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: list_daily_tasks_index
+          KeySchema:
+            - AttributeName: sort_key
+              KeyType: HASH
+            - AttributeName: partition_key
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
       BillingMode: PAY_PER_REQUEST

@@ -7,3 +7,14 @@
         method: post
   environment:
     DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}
+
+'list-tasks':
+  handler: src/usecases/list-tasks/index.handler
+  description: list tasks
+  events:
+    - http:
+        path: /
+        method: get
+  environment:
+    DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}
+    DYNAMODB_DAILY_TASKS_INDEX_NAME: ${self:custom.variables.DYNAMODB_DAILY_TASKS_INDEX_NAME}
