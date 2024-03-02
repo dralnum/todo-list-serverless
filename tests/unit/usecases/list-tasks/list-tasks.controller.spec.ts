@@ -22,25 +22,25 @@ describe('Testing list tasks controller', () => {
 
   const controller = ListTasksControllerFactory(usecaseMock, loggerMock);
 
-  it('execute function should exist', () => {
+  it('listTasks function should exist', () => {
     expect(controller.listTasks).to.exist.and.be.a('function');
   });
 
-  it('execute function should return success with date', async () => {
+  it('listTasks function should return success with date', async () => {
     const response = await controller.listTasks({ date: '2024-02-29' });
 
     expect(response.status).to.equal(200);
     expect(response.body.success).to.equal(true);
   });
 
-  it('execute function should return success without date', async () => {
+  it('listTasks function should return success without date', async () => {
     const response = await controller.listTasks({});
 
     expect(response.status).to.equal(200);
     expect(response.body.success).to.equal(true);
   });
 
-  it('execute function should return mapped error', async () => {
+  it('listTasks function should return mapped error status 400', async () => {
     const mappedError = {
       status: 400,
       body: {
@@ -57,7 +57,7 @@ describe('Testing list tasks controller', () => {
     expect(loggerMock.error.calledWithExactly('Mapped error while listing tasks', mappedError)).to.be.true;
   });
 
-  it('execute function should return unmapped error', async () => {
+  it('listTasks function should return unmapped error status 500', async () => {
     const usecaseMock = {
       execute: stub().rejects({ error: 'test errorMessage' }),
     };

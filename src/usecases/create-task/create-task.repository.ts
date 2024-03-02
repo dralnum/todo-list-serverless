@@ -26,7 +26,7 @@ export function CreateTaskRepositoryFactory(dynamoDBClient: DynamoDBClient) {
     title: task.title,
     description: task.description,
     done: task.done,
-    created_at_timestamp: task.createdAtTimestamp,
+    created_at_timestamp: task.createdAtTimestamp.getTime(),
   });
 
   const createTask = async (data: Task) => {

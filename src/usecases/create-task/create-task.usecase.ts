@@ -10,7 +10,7 @@ export interface Task {
   title: string;
   description: string;
   done: boolean;
-  createdAtTimestamp: number;
+  createdAtTimestamp: Date;
 }
 
 interface CreateTaskUsecaseInput {
@@ -27,7 +27,7 @@ export const CreateTaskUsecaseFactory = (repository: CreateTaskRepository) => {
       date,
       title,
       description,
-      createdAtTimestamp: new Date().getTime(),
+      createdAtTimestamp: new Date(),
       done: done ?? false,
     };
 
