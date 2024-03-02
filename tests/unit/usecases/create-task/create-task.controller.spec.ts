@@ -22,25 +22,25 @@ describe('Testing create task controller', () => {
 
   const controller = CreateTaskControllerFactory(usecaseMock, loggerMock);
 
-  it('execute function should exist', () => {
+  it('createTask function should exist', () => {
     expect(controller.createTask).to.exist.and.be.a('function');
   });
 
-  it('execute function should return success', async () => {
+  it('createTask function should return success', async () => {
     const response = await controller.createTask({ date: '2024-02-29', title: 'Task Title', description: 'Task Description', done: true });
 
     expect(response.status).to.equal(201);
     expect(response.body.success).to.equal(true);
   });
 
-  it('execute function should return mapped error', async () => {
+  it('createTask function should return mapped error status 400', async () => {
     const response = await controller.createTask({});
 
     expect(response.status).to.equal(400);
     expect(response.body.success).to.equal(false);
   });
 
-  it('execute function should return unmapped error', async () => {
+  it('createTask function should return unmapped error status 500', async () => {
     const usecaseMock = {
       execute: stub().rejects(),
     };
