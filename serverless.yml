@@ -27,7 +27,7 @@ plugins:
 resources: ${file(./infra/resources.yml)}
 
 package:
-  individually: true
+  individually: false
   excludeDevDependencies: true
 
 functions: ${file(./infra/functions.yml)}

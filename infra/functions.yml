@@ -32,3 +32,17 @@
               taskId: true
   environment:
     DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}
+
+'delete-task':
+  handler: src/usecases/delete-task/index.handler
+  description: delete task with the given ID
+  events:
+    - http:
+        path: /{taskId}
+        method: delete
+        request:
+          parameters:
+            paths:
+              taskId: true
+  environment:
+    DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}
