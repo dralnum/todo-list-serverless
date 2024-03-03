@@ -14,6 +14,8 @@ export interface Task {
 }
 
 interface CreateTaskUsecaseInput {
+  username: string;
+  taskListId: string;
   date: Date;
   title: string;
   description: string;
@@ -21,7 +23,9 @@ interface CreateTaskUsecaseInput {
 }
 
 export const CreateTaskUsecaseFactory = (repository: CreateTaskRepository) => {
-  const execute = async ({ date, title, description, done }: CreateTaskUsecaseInput) => {
+  const execute = async ({ username, taskListId, date, title, description, done }: CreateTaskUsecaseInput) => {
+    console.log(username);
+
     const task: Task = {
       id: uuid(),
       date,
@@ -31,7 +35,7 @@ export const CreateTaskUsecaseFactory = (repository: CreateTaskRepository) => {
       done: done ?? false,
     };
 
-    await repository.createTask(task);
+    await repository.createTask(taskListId, task);
 
     return {
       success: true,

@@ -11,6 +11,7 @@ export type DeleteTaskController = ReturnType<typeof DeleteTaskControllerFactory
 export function DeleteTaskControllerFactory(usecase: DeleteTaskUsecase, logger: Logger) {
   const DeleteTaskInput = object({
     taskId: string(),
+    taskListId: string(),
   });
 
   const validate = (data: unknown) => {

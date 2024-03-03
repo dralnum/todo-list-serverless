@@ -12,6 +12,7 @@ export function CreateTaskHandlerFactory(controller: CreateTaskController, logge
 
     const data = {
       ...JSON.parse(event?.body || '{}'),
+      ...(event?.pathParameters || {}),
     };
 
     const response = await controller.createTask(data);

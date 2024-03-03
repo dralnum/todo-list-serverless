@@ -30,12 +30,13 @@ export function ListTasksRepositoryFactory(dynamoDBClient: DynamoDBClient) {
     done: databaseTask.done,
   });
 
-  const findAllTasks = async () => {
-    const response = await dynamoDBClient.scan({
+  const findAllTasks = async taskListId => {
+    const response = await dynamoDBClient.query({
       TableName: config.dynamoDBTableName,
-      FilterExpression: 'contains (partition_key, :partition_key)',
+      KeyConditionExpression: `partition_key=:partition_key and begins_with(sort_key,:sort_key)`,
       ExpressionAttributeValues: {
-        ':partition_key': `${DatabaseEntityNames.task}#`,
+        ':partition_key': `${DatabaseEntityNames.TaskListId}#${taskListId}`,
+        ':sort_key': `${DatabaseEntityNames.TaskId}#`,
       },
     });
 
@@ -44,16 +45,14 @@ export function ListTasksRepositoryFactory(dynamoDBClient: DynamoDBClient) {
     return tasks.map(databaseTaskToDomain);
   };
 
-  const findTasks = async (date: Date) => {
-    const sortKey = `${DatabaseEntityNames.date}#${date.toLocaleDateString('en-US')}`;
-
+  const findTasks = async (date: Date, taskListId: string) => {
     const response = await dynamoDBClient.query({
       TableName: config.dynamoDBTableName,
       IndexName: config.dynamoDBDailyTasksIndexName,
-      KeyConditionExpression: `sort_key=:sort_key and begins_with(partition_key,:partition_key)`,
+      KeyConditionExpression: `partition_key=:partition_key and date_string=:date_string`,
       ExpressionAttributeValues: {
-        ':partition_key': `${DatabaseEntityNames.task}#`,
-        ':sort_key': sortKey,
+        ':partition_key': `${DatabaseEntityNames.TaskListId}#${taskListId}`,
+        ':date_string': date.toLocaleDateString('en-US'),
       },
     });
 

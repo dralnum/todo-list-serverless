@@ -3,7 +3,7 @@
   description: create task
   events:
     - http:
-        path: /
+        path: /list/{taskListId}/task/
         method: post
   environment:
     DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}
@@ -13,7 +13,7 @@
   description: list tasks
   events:
     - http:
-        path: /
+        path: /list/{taskListId}/tasks
         method: get
   environment:
     DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}
@@ -24,7 +24,7 @@
   description: find task with the given ID
   events:
     - http:
-        path: /{taskId}
+        path: /list/{taskListId}/task/{taskId}
         method: get
         request:
           parameters:
@@ -38,7 +38,7 @@
   description: update task with the given ID
   events:
     - http:
-        path: /{taskId}
+        path: /list/{taskListId}/task/{taskId}
         method: patch
         request:
           parameters:
@@ -52,7 +52,7 @@
   description: delete task with the given ID
   events:
     - http:
-        path: /{taskId}
+        path: /list/{taskListId}/task/{taskId}
         method: delete
         request:
           parameters:

@@ -1,4 +1,5 @@
 export enum DatabaseEntityNames {
-  task = 'task',
-  date = 'task-date',
+  Username = 'username',
+  TaskListId = 'task-list-id',
+  TaskId = 'task-id',
 }

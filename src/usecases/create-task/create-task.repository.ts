@@ -10,6 +10,7 @@ export interface DatabaseTask {
   partition_key: string;
   sort_key: string;
   id: string;
+  date_string: string;
   date_timestamp: number;
   title: string;
   description: string;
@@ -18,10 +19,11 @@ export interface DatabaseTask {
 }
 
 export function CreateTaskRepositoryFactory(dynamoDBClient: DynamoDBClient) {
-  const TaskToDatabase = (task: Task): DatabaseTask => ({
-    partition_key: `${DatabaseEntityNames.task}#${task.id}`,
-    sort_key: `${DatabaseEntityNames.date}#${task.date.toLocaleDateString('en-US')}`,
+  const TaskToDatabase = (taskListId: string, task: Task): DatabaseTask => ({
+    partition_key: `${DatabaseEntityNames.TaskListId}#${taskListId}`,
+    sort_key: `${DatabaseEntityNames.TaskId}#${task.id}`,
     id: task.id,
+    date_string: task.date.toLocaleDateString('en-US'),
     date_timestamp: task.date.getTime(),
     title: task.title,
     description: task.description,
@@ -29,10 +31,10 @@ export function CreateTaskRepositoryFactory(dynamoDBClient: DynamoDBClient) {
     created_at_timestamp: task.createdAtTimestamp.getTime(),
   });
 
-  const createTask = async (data: Task) => {
+  const createTask = async (taskListId: string, data: Task) => {
     const response = await dynamoDBClient.put({
       TableName: config.dynamoDBTableName,
-      Item: TaskToDatabase(data),
+      Item: TaskToDatabase(taskListId, data),
     });
 
     return response;

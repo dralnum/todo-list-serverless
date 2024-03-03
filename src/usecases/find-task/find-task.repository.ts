@@ -26,14 +26,14 @@ export function FindTaskRepositoryFactory(dynamoDBClient: DynamoDBClient) {
     createdAtTimestamp: new Date(databaseTask.created_at_timestamp),
   });
 
-  const findTask = async (taskId: string) => {
+  const findTask = async (taskId: string, taskListId: string) => {
     const response = await dynamoDBClient.query({
       TableName: config.dynamoDBTableName,
       Limit: 1,
-      KeyConditionExpression: `partition_key=:partition_key and begins_with(sort_key,:sort_key)`,
+      KeyConditionExpression: `partition_key=:partition_key and sort_key=:sort_key`,
       ExpressionAttributeValues: {
-        ':partition_key': `${DatabaseEntityNames.task}#${taskId}`,
-        ':sort_key': `${DatabaseEntityNames.date}#`,
+        ':partition_key': `${DatabaseEntityNames.TaskListId}#${taskListId}`,
+        ':sort_key': `${DatabaseEntityNames.TaskId}#${taskId}`,
       },
     });
 

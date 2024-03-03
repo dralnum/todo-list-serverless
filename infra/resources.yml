@@ -8,6 +8,8 @@ Resources:
           AttributeType: S
         - AttributeName: sort_key
           AttributeType: S
+        - AttributeName: date_string
+          AttributeType: S
       KeySchema:
         - AttributeName: partition_key
           KeyType: HASH
@@ -16,9 +18,9 @@ Resources:
       GlobalSecondaryIndexes:
         - IndexName: list_daily_tasks_index
           KeySchema:
-            - AttributeName: sort_key
-              KeyType: HASH
             - AttributeName: partition_key
+              KeyType: HASH
+            - AttributeName: date_string
               KeyType: RANGE
           Projection:
             ProjectionType: ALL

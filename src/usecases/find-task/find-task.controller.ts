@@ -10,6 +10,7 @@ export type FindTaskController = ReturnType<typeof FindTaskControllerFactory>;
 
 export function FindTaskControllerFactory(usecase: FindTaskUsecase, logger: Logger) {
   const FindTaskInput = object({
+    taskListId: string(),
     taskId: string(),
   });
 
