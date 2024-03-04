@@ -10,8 +10,8 @@ export function DeleteTaskRepositoryFactory(dynamoDBClient: DynamoDBClient) {
     const response = await dynamoDBClient.deleteItem({
       TableName: config.dynamoDBTableName,
       Key: {
-        ':partition_key': `${DatabaseEntityNames.TaskListId}#${taskListId}`,
-        ':sort_key': `${DatabaseEntityNames.TaskId}#${taskId}`,
+        partition_key: `${DatabaseEntityNames.TaskListId}#${taskListId}`,
+        sort_key: `${DatabaseEntityNames.TaskId}#${taskId}`,
       },
     });
 

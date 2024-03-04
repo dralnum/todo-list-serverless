@@ -16,6 +16,7 @@ export const TaskSchema = object({
 export const UpdateTaskSchema = object({
   taskListId: string(),
   taskId: string(),
+  date: optional(CoercedDate),
   title: optional(nonempty(string())),
   description: optional(nonempty(string())),
   done: optional(boolean()),

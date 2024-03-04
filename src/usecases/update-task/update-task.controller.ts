@@ -63,6 +63,14 @@ export function UpdateTaskControllerFactory(usecase: UpdateTaskUsecase, logger: 
         code: error.code,
       },
     }),
+    [UpdateTaskErrorCodes.NotFound]: (error: CustomError<UpdateTaskErrorCodes>) => ({
+      status: 404,
+      body: {
+        success: false,
+        message: error.message,
+        code: error.code,
+      },
+    }),
     [UpdateTaskErrorCodes.Default]: () => ({
       status: 500,
       body: {

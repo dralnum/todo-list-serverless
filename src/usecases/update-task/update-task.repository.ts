@@ -19,6 +19,7 @@ export interface DatabaseTask extends Attributes {
 export function UpdateTaskRepositoryFactory(dynamoDBClient: DynamoDBClient) {
   const taskToDatabase = (task: UpdateTaskUsecaseInput): DatabaseTask => ({
     date_timestamp: task.date ? task.date.getTime() : undefined,
+    date_string: task.date ? task.date.toLocaleDateString('en-US') : undefined,
     title: task.title,
     description: task.description,
     done: task.done,
