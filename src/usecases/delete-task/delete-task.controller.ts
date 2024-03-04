@@ -9,13 +9,13 @@ import { DeleteTaskErrorCodes } from './delete-task.errors';
 export type DeleteTaskController = ReturnType<typeof DeleteTaskControllerFactory>;
 
 export function DeleteTaskControllerFactory(usecase: DeleteTaskUsecase, logger: Logger) {
-  const DeleteTaskInput = object({
+  const DeleteTaskSchema = object({
     taskId: string(),
     taskListId: string(),
   });
 
   const validate = (data: unknown) => {
-    assert(data, DeleteTaskInput);
+    assert(data, DeleteTaskSchema);
 
     return data;
   };

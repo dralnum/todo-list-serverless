@@ -1,5 +1,4 @@
-export enum CreateTaskErrorCodes {
+export enum ListListsErrorCodes {
   Default = 'DEFAULT',
   InvalidParameters = 'INVALID_PARAMETERS',
-  NotFound = 'NOT_FOUND',
 }

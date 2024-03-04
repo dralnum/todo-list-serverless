@@ -1,6 +1,8 @@
 import { v4 as uuid } from 'uuid';
 
 import type { CreateTaskRepository } from './create-task.repository';
+import { CustomError } from '../../helpers/error';
+import { CreateTaskErrorCodes } from './create-task.errors';
 
 export type CreateTaskUsecase = ReturnType<typeof CreateTaskUsecaseFactory>;
 
@@ -24,7 +26,11 @@ interface CreateTaskUsecaseInput {
 
 export const CreateTaskUsecaseFactory = (repository: CreateTaskRepository) => {
   const execute = async ({ username, taskListId, date, title, description, done }: CreateTaskUsecaseInput) => {
-    console.log(username);
+    const list = await repository.findList(username, taskListId);
+
+    if (!list) {
+      throw new CustomError(CreateTaskErrorCodes.NotFound, `List not found for the given information: Username: ${username} - ID: ${taskListId}`);
+    }
 
     const task: Task = {
       id: uuid(),

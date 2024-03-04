@@ -3,6 +3,7 @@ import { DatabaseEntityNames } from '../../helpers/constants';
 import { config } from '../../config';
 
 import type { Task } from './create-task.usecase';
+import { DatabaseList } from '../create-list/create-list.repository';
 
 export type CreateTaskRepository = ReturnType<typeof CreateTaskRepositoryFactory>;
 
@@ -16,6 +17,11 @@ export interface DatabaseTask {
   description: string;
   done: boolean;
   created_at_timestamp: number;
+}
+
+interface List {
+  id: string;
+  title: string;
 }
 
 export function CreateTaskRepositoryFactory(dynamoDBClient: DynamoDBClient) {
@@ -40,5 +46,26 @@ export function CreateTaskRepositoryFactory(dynamoDBClient: DynamoDBClient) {
     return response;
   };
 
-  return { createTask };
+  const databaseListToDomain = (databaseList: DatabaseList): List => ({
+    id: databaseList.id,
+    title: databaseList.title,
+  });
+
+  const findList = async (username: string, taskListId: string) => {
+    const response = await dynamoDBClient.query({
+      TableName: config.dynamoDBTableName,
+      Limit: 1,
+      KeyConditionExpression: `partition_key=:partition_key and sort_key=:sort_key`,
+      ExpressionAttributeValues: {
+        ':partition_key': `${DatabaseEntityNames.Username}#${username}`,
+        ':sort_key': `${DatabaseEntityNames.TaskListId}#${taskListId}`,
+      },
+    });
+
+    const [list] = response.Items as DatabaseList[];
+
+    return !list ? undefined : databaseListToDomain(list);
+  };
+
+  return { createTask, findList };
 }
