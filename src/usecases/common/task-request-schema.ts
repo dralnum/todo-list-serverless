@@ -10,3 +10,10 @@ export const TaskSchema = object({
   description: nonempty(string()),
   done: optional(boolean()),
 });
+
+export const UpdateTaskSchema = object({
+  taskId: string(),
+  title: optional(nonempty(string())),
+  description: optional(nonempty(string())),
+  done: optional(boolean()),
+});
