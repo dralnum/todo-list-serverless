@@ -1,6 +1,7 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { stub, spy } from 'sinon';
+import { v4 as uuid } from 'uuid';
 
 import { ListTasksControllerFactory } from '../../../../src/usecases/list-tasks/list-tasks.controller';
 
@@ -22,19 +23,21 @@ describe('Testing list tasks controller', () => {
 
   const controller = ListTasksControllerFactory(usecaseMock, loggerMock);
 
+  const taskListId = uuid();
+
   it('listTasks function should exist', () => {
     expect(controller.listTasks).to.exist.and.be.a('function');
   });
 
   it('listTasks function should return success with date', async () => {
-    const response = await controller.listTasks({ date: '2024-02-29' });
+    const response = await controller.listTasks({ taskListId, date: '2024-02-29' });
 
     expect(response.status).to.equal(200);
     expect(response.body.success).to.equal(true);
   });
 
   it('listTasks function should return success without date', async () => {
-    const response = await controller.listTasks({});
+    const response = await controller.listTasks({ taskListId });
 
     expect(response.status).to.equal(200);
     expect(response.body.success).to.equal(true);
@@ -50,7 +53,7 @@ describe('Testing list tasks controller', () => {
       },
     };
 
-    const response = await controller.listTasks({ date: 'lorem ipsum' });
+    const response = await controller.listTasks({ taskListId, date: 'lorem ipsum' });
 
     expect(response.status).to.equal(400);
     expect(response.body.success).to.equal(false);
@@ -64,7 +67,7 @@ describe('Testing list tasks controller', () => {
 
     const controller = ListTasksControllerFactory(usecaseMock, loggerMock);
 
-    const response = await controller.listTasks({ date: '2024-02-29' });
+    const response = await controller.listTasks({ taskListId, date: '2024-02-29' });
 
     expect(response.status).to.equal(500);
     expect(response.body.success).to.equal(false);

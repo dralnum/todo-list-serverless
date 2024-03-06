@@ -11,6 +11,7 @@ use(chaiAsPromised);
 
 describe('Testing find task usecase', () => {
   const taskId = uuid();
+  const taskListId = uuid();
   const task: Task = {
     id: taskId,
     date: new Date(),
@@ -30,7 +31,7 @@ describe('Testing find task usecase', () => {
   });
 
   it('execute function should return success', async () => {
-    const response = await usecase.execute({ taskId });
+    const response = await usecase.execute({ taskId, taskListId });
 
     expect(response.success).to.equal(true);
   });
@@ -42,6 +43,6 @@ describe('Testing find task usecase', () => {
 
     const usecase = FindTaskUsecaseFactory(repositoryMock);
 
-    await expect(usecase.execute({ taskId })).to.be.rejected;
+    await expect(usecase.execute({ taskId, taskListId })).to.be.rejected;
   });
 });

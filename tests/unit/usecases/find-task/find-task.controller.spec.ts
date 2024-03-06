@@ -10,6 +10,7 @@ import { FindTaskErrorCodes } from '../../../../src/usecases/find-task/find-task
 
 describe('Testing find task controller', () => {
   const taskId = uuid();
+  const taskListId = uuid();
   const task: Task = {
     id: taskId,
     date: new Date(),
@@ -43,7 +44,7 @@ describe('Testing find task controller', () => {
   });
 
   it('findTask function should return success', async () => {
-    const response = await controller.findTask({ taskId });
+    const response = await controller.findTask({ taskId, taskListId });
 
     expect(response.status).to.equal(200);
     expect(response.body.success).to.equal(true);
@@ -59,7 +60,7 @@ describe('Testing find task controller', () => {
       },
     };
 
-    const response = await controller.findTask({});
+    const response = await controller.findTask({ taskListId });
 
     expect(response.status).to.equal(400);
     expect(response.body.success).to.equal(false);
@@ -83,7 +84,7 @@ describe('Testing find task controller', () => {
 
     const controller = FindTaskControllerFactory(usecaseMock, loggerMock);
 
-    const response = await controller.findTask({ taskId });
+    const response = await controller.findTask({ taskId, taskListId });
 
     expect(response.status).to.equal(404);
     expect(response.body.success).to.equal(false);
@@ -97,7 +98,7 @@ describe('Testing find task controller', () => {
 
     const controller = FindTaskControllerFactory(usecaseMock, loggerMock);
 
-    const response = await controller.findTask({ taskId });
+    const response = await controller.findTask({ taskId, taskListId });
 
     expect(response.status).to.equal(500);
     expect(response.body.success).to.equal(false);

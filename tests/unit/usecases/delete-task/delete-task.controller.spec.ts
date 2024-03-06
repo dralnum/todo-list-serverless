@@ -10,6 +10,7 @@ import { DeleteTaskErrorCodes } from '../../../../src/usecases/delete-task/delet
 
 describe('Testing delete task controller', () => {
   const taskId = uuid();
+  const taskListId = uuid();
   const task: Task = {
     id: taskId,
     date: new Date(),
@@ -43,7 +44,7 @@ describe('Testing delete task controller', () => {
   });
 
   it('deleteTask function should return success', async () => {
-    const response = await controller.deleteTask({ taskId });
+    const response = await controller.deleteTask({ taskId, taskListId });
 
     expect(response.status).to.equal(200);
     expect(response.body.success).to.equal(true);
@@ -59,7 +60,7 @@ describe('Testing delete task controller', () => {
       },
     };
 
-    const response = await controller.deleteTask({});
+    const response = await controller.deleteTask({ taskListId });
 
     expect(response.status).to.equal(400);
     expect(response.body.success).to.equal(false);
@@ -83,7 +84,7 @@ describe('Testing delete task controller', () => {
 
     const controller = DeleteTaskControllerFactory(usecaseMock, loggerMock);
 
-    const response = await controller.deleteTask({ taskId });
+    const response = await controller.deleteTask({ taskId, taskListId });
 
     expect(response.status).to.equal(404);
     expect(response.body.success).to.equal(false);
@@ -97,7 +98,7 @@ describe('Testing delete task controller', () => {
 
     const controller = DeleteTaskControllerFactory(usecaseMock, loggerMock);
 
-    const response = await controller.deleteTask({ taskId });
+    const response = await controller.deleteTask({ taskId, taskListId });
 
     expect(response.status).to.equal(500);
     expect(response.body.success).to.equal(false);
