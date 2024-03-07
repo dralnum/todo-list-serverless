@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid';
 
 import { CreateTaskUsecaseFactory } from '../../../../src/usecases/create-task/create-task.usecase';
 
-describe('Testing create task usecase', () => {
+describe('Testing create task usecase', async () => {
   const repositoryMock = {
     createTask: stub().resolves({}),
     findList: stub().resolves({}),
@@ -22,16 +22,19 @@ describe('Testing create task usecase', () => {
   };
 
   const usecase = CreateTaskUsecaseFactory(repositoryMock);
+  const response = await usecase.execute(createTaskUsecaseInput);
 
   it('execute function should exist', () => {
     expect(usecase.execute).to.exist.and.be.a('function');
   });
 
   it('execute function should return success', async () => {
-    const response = await usecase.execute(createTaskUsecaseInput);
-
     expect(response.success).to.equal(true);
     expect(response.data.done).to.equal(true);
+  });
+
+  it('execute function should create a task and return the id', async () => {
+    expect(response.data.id).to.be.a.string;
   });
 
   it('execute function should create a task with done to be false', async () => {
