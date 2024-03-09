@@ -63,6 +63,14 @@ export function CreateTaskControllerFactory(usecase: CreateTaskUsecase, logger: 
         code: error.code,
       },
     }),
+    [CreateTaskErrorCodes.NotFound]: (error: CustomError<CreateTaskErrorCodes>) => ({
+      status: 404,
+      body: {
+        success: false,
+        message: error.message,
+        code: error.code,
+      },
+    }),
     [CreateTaskErrorCodes.Default]: () => ({
       status: 500,
       body: {

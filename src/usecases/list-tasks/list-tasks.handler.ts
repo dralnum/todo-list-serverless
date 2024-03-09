@@ -1,9 +1,9 @@
 import type { Logger } from '../../clients/logger';
 import { APIGatewayEvent } from 'aws-lambda';
 
-import { CreateTaskController } from './create-task.controller';
+import { ListTasksController } from './list-tasks.controller';
 
-export function CreateTaskHandlerFactory(controller: CreateTaskController, logger: Logger) {
+export function ListTasksHandlerFactory(controller: ListTasksController, logger: Logger) {
   const handler = async (event: APIGatewayEvent) => {
     const requestId = event?.headers?.['requestId'];
     if (requestId) {
@@ -13,9 +13,10 @@ export function CreateTaskHandlerFactory(controller: CreateTaskController, logge
     const data = {
       ...JSON.parse(event?.body || '{}'),
       ...(event?.pathParameters || {}),
+      ...(event?.queryStringParameters || {}),
     };
 
-    const response = await controller.createTask(data);
+    const response = await controller.listTasks(data);
 
     return {
       statusCode: response.status,

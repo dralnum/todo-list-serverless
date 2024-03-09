@@ -2,10 +2,23 @@ role:
   statements:
     - Effect: Allow
       Action:
+        - dynamodb:Scan
         - dynamodb:Query
         - dynamodb:PutItem
         - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
       Resource:
         Fn::GetAtt:
           - TaskTable
           - Arn
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+      Resource:
+        Fn::Join:
+          - ''
+          - - Fn::GetAtt:
+                - TaskTable
+                - Arn
+            - '/index/'
+            - list_daily_tasks_index
