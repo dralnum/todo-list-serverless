@@ -3,8 +3,12 @@
   description: create task
   events:
     - http:
-        path: /
+        path: /list/{taskListId}/task/
         method: post
+        request:
+          parameters:
+            paths:
+              taskListId: true
   environment:
     DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}
 
@@ -13,8 +17,12 @@
   description: list tasks
   events:
     - http:
-        path: /
+        path: /list/{taskListId}/tasks
         method: get
+        request:
+          parameters:
+            paths:
+              taskListId: true
   environment:
     DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}
     DYNAMODB_DAILY_TASKS_INDEX_NAME: ${self:custom.variables.DYNAMODB_DAILY_TASKS_INDEX_NAME}
@@ -24,12 +32,13 @@
   description: find task with the given ID
   events:
     - http:
-        path: /{taskId}
+        path: /list/{taskListId}/task/{taskId}
         method: get
         request:
           parameters:
             paths:
               taskId: true
+              taskListId: true
   environment:
     DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}
 
@@ -38,12 +47,13 @@
   description: update task with the given ID
   events:
     - http:
-        path: /{taskId}
+        path: /list/{taskListId}/task/{taskId}
         method: patch
         request:
           parameters:
             paths:
               taskId: true
+              taskListId: true
   environment:
     DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}
 
@@ -52,11 +62,40 @@
   description: delete task with the given ID
   events:
     - http:
-        path: /{taskId}
+        path: /list/{taskListId}/task/{taskId}
         method: delete
         request:
           parameters:
             paths:
               taskId: true
+              taskListId: true
+  environment:
+    DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}
+
+'create-list':
+  handler: src/usecases/create-list/index.handler
+  description: create list
+  events:
+    - http:
+        path: /username/{username}/list
+        method: post
+        request:
+          parameters:
+            paths:
+              username: true
+  environment:
+    DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}
+
+'list-lists':
+  handler: src/usecases/list-lists/index.handler
+  description: list lists
+  events:
+    - http:
+        path: /username/{username}/lists
+        method: get
+        request:
+          parameters:
+            paths:
+              username: true
   environment:
     DYNAMODB_TABLE_NAME: ${self:custom.variables.DYNAMODB_TABLE_NAME}

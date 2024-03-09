@@ -23,6 +23,10 @@ export function UpdateTaskControllerFactory(usecase: UpdateTaskUsecase, logger: 
 
       try {
         validated = validate(data);
+
+        if (!validated.date && !validated.title && !validated.description && !validated.done) {
+          throw new Error('At least one of the attributes to update was expected, but none were received');
+        }
       } catch (error: any) {
         throw new CustomError(UpdateTaskErrorCodes.InvalidParameters, error?.message || error);
       }
@@ -57,6 +61,14 @@ export function UpdateTaskControllerFactory(usecase: UpdateTaskUsecase, logger: 
   const errorHandler = {
     [UpdateTaskErrorCodes.InvalidParameters]: (error: CustomError<UpdateTaskErrorCodes>) => ({
       status: 400,
+      body: {
+        success: false,
+        message: error.message,
+        code: error.code,
+      },
+    }),
+    [UpdateTaskErrorCodes.NotFound]: (error: CustomError<UpdateTaskErrorCodes>) => ({
+      status: 404,
       body: {
         success: false,
         message: error.message,

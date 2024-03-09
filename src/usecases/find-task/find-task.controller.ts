@@ -9,12 +9,13 @@ import { FindTaskErrorCodes } from './find-task.errors';
 export type FindTaskController = ReturnType<typeof FindTaskControllerFactory>;
 
 export function FindTaskControllerFactory(usecase: FindTaskUsecase, logger: Logger) {
-  const FindTaskInput = object({
+  const FindTaskSchema = object({
+    taskListId: string(),
     taskId: string(),
   });
 
   const validate = (data: unknown) => {
-    assert(data, FindTaskInput);
+    assert(data, FindTaskSchema);
 
     return data;
   };

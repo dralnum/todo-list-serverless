@@ -12,6 +12,7 @@ export function ListTasksHandlerFactory(controller: ListTasksController, logger:
 
     const data = {
       ...JSON.parse(event?.body || '{}'),
+      ...(event?.pathParameters || {}),
       ...(event?.queryStringParameters || {}),
     };
 

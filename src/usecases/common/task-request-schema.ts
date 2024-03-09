@@ -5,6 +5,8 @@ export const CoercedDate = coerce(date(), string(), dateString => {
 });
 
 export const TaskSchema = object({
+  username: nonempty(string()),
+  taskListId: string(),
   date: CoercedDate,
   title: nonempty(string()),
   description: nonempty(string()),
@@ -12,7 +14,9 @@ export const TaskSchema = object({
 });
 
 export const UpdateTaskSchema = object({
+  taskListId: string(),
   taskId: string(),
+  date: optional(CoercedDate),
   title: optional(nonempty(string())),
   description: optional(nonempty(string())),
   done: optional(boolean()),

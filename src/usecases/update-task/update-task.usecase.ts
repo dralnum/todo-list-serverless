@@ -14,6 +14,7 @@ export interface Task {
 }
 
 export interface UpdateTaskUsecaseInput {
+  taskListId: string;
   taskId: string;
   date?: Date;
   title?: string;
@@ -23,11 +24,15 @@ export interface UpdateTaskUsecaseInput {
 
 export const UpdateTaskUsecaseFactory = (repository: UpdateTaskRepository) => {
   const execute = async (task: UpdateTaskUsecaseInput) => {
-    const response = await repository.updateTask(task);
+    const { taskListId, taskId } = task;
+
+    const response = await repository.findTask(taskId, taskListId);
 
     if (!response) {
       throw new CustomError(UpdateTaskErrorCodes.NotFound, `Task not found for the given ID: ${task.taskId}`);
     }
+
+    await repository.updateTask(task);
 
     return {
       success: true,

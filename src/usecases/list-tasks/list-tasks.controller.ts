@@ -1,4 +1,4 @@
-import { assert, create, object, optional } from 'superstruct';
+import { assert, create, object, optional, string } from 'superstruct';
 
 import type { Logger } from '../../clients/logger';
 import { CustomError } from '../../helpers/error';
@@ -10,13 +10,14 @@ import { CoercedDate } from '../common/task-request-schema';
 export type ListTasksController = ReturnType<typeof ListTasksControllerFactory>;
 
 export function ListTasksControllerFactory(usecase: ListTasksUsecase, logger: Logger) {
-  const listTasksDateInput = object({
+  const listTasksSchema = object({
     date: optional(CoercedDate),
+    taskListId: string(),
   });
 
   const validate = (data: unknown) => {
-    const coercedData = create(data, listTasksDateInput);
-    assert(coercedData, listTasksDateInput);
+    const coercedData = create(data, listTasksSchema);
+    assert(coercedData, listTasksSchema);
 
     return coercedData;
   };

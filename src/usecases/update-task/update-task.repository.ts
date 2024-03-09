@@ -4,7 +4,7 @@ import { config } from '../../config';
 
 import { UpdateTaskUsecaseInput } from './update-task.usecase';
 import { objectToUpdateExpression, objectToUpdateExpressionAttributeValues } from '../../helpers/dynamodb';
-
+import { FindTaskRepositoryFactory } from '../find-task/find-task.repository';
 export type UpdateTaskRepository = ReturnType<typeof UpdateTaskRepositoryFactory>;
 
 type Attributes = { [key: string]: string | number | boolean };
@@ -19,35 +19,18 @@ export interface DatabaseTask extends Attributes {
 export function UpdateTaskRepositoryFactory(dynamoDBClient: DynamoDBClient) {
   const taskToDatabase = (task: UpdateTaskUsecaseInput): DatabaseTask => ({
     date_timestamp: task.date ? task.date.getTime() : undefined,
+    date_string: task.date ? task.date.toLocaleDateString('en-US') : undefined,
     title: task.title,
     description: task.description,
     done: task.done,
   });
 
   const updateTask = async (data: UpdateTaskUsecaseInput) => {
-    const tasks = await dynamoDBClient.query({
-      TableName: config.dynamoDBTableName,
-      Limit: 1,
-      KeyConditionExpression: `partition_key=:partition_key and begins_with(sort_key,:sort_key)`,
-      ExpressionAttributeValues: {
-        ':partition_key': `${DatabaseEntityNames.task}#${data.taskId}`,
-        ':sort_key': `${DatabaseEntityNames.date}#`,
-      },
-    });
-
-    const [task] = tasks.Items as DatabaseTask[];
-
-    if (!task) {
-      return undefined;
-    }
-
-    const sortKey = task.sort_key;
-
     const response = await dynamoDBClient.update({
       TableName: config.dynamoDBTableName,
       Key: {
-        partition_key: `${DatabaseEntityNames.task}#${data.taskId}`,
-        sort_key: sortKey,
+        partition_key: `${DatabaseEntityNames.TaskListId}#${data.taskListId}`,
+        sort_key: `${DatabaseEntityNames.TaskId}#${data.taskId}`,
       },
       UpdateExpression: objectToUpdateExpression(taskToDatabase(data)),
       ExpressionAttributeValues: objectToUpdateExpressionAttributeValues(taskToDatabase(data)),
@@ -57,5 +40,5 @@ export function UpdateTaskRepositoryFactory(dynamoDBClient: DynamoDBClient) {
     return response;
   };
 
-  return { updateTask };
+  return { updateTask, findTask: FindTaskRepositoryFactory(dynamoDBClient).findTask };
 }
