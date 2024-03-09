@@ -11,6 +11,7 @@
 [AWS CLI](https://aws.amazon.com/cli/)
 <br>
 An **AWS IAM** user and their credentials with all required permissions
+<br>
 A Github Account
 <br>
 <br>
